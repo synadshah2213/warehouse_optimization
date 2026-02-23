@@ -17,3 +17,12 @@ grid[7][3] = -1
 for row in grid:
     print(row)
     
+item_positions = {"item_A": (4,5), "item_B": (6,2), "item_C": (8,8)}
+print(item_positions)
+
+order = ["item_A", "item_C"]
+print(order)
+
+for x in order:
+    item_positions[x]
+    print(item_positions[x])
