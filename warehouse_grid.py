@@ -1,3 +1,5 @@
+import itertools
+
 grid = []                    # start with an empty grid
 
 worker = (2,3)
@@ -23,7 +25,7 @@ for row in grid:
 item_positions = {"item_A": (4,5), "item_B": (6,2), "item_C": (8,8)}
 print(item_positions)
 
-order = ["item_A", "item_C"]
+order = ["item_A", "item_C", "item_B"]
 print(order)
 
 for x in order:
@@ -39,3 +41,13 @@ def calculate_distance(pos1, pos2):
 
 x = calculate_distance(worker,(4,5)) + calculate_distance((4,5),(8,8)) + calculate_distance((8,8),dispatch)
 print(x)
+
+print(list(itertools.permutations(order)))
+
+all_distances = []
+for x in list(itertools.permutations(order)):
+    print(x)
+    total_distance = calculate_distance(worker,item_positions[x[0]]) + calculate_distance(item_positions[x[0]], item_positions[x[1]]) + calculate_distance(item_positions[x[1]],item_positions[x[2]]) + calculate_distance(item_positions[x[2]], dispatch)
+    print(total_distance)
+    all_distances.append(total_distance)
+    print(min(all_distances))
