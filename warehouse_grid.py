@@ -1,4 +1,5 @@
 import itertools
+import random
 
 grid = []                    # start with an empty grid
 
@@ -51,3 +52,29 @@ for x in list(itertools.permutations(order)):
     print(total_distance)
     all_distances.append(total_distance)
     print(min(all_distances))
+
+random.shuffle(order)
+print(order)
+
+random_distance = calculate_distance(worker, item_positions[order[0]]) + calculate_distance(item_positions[order[0]], item_positions[order[1]]) + calculate_distance(item_positions[order[1]], item_positions[order[2]]) + calculate_distance(item_positions[order[2]], dispatch)
+print(random_distance)
+
+improvement = ((random_distance - min(all_distances))/random_distance) * 100
+print(improvement)
+
+
+for row in grid:
+    for cell in row:
+        if cell == 0:
+            print (".", end=" ")
+        elif cell == 1:
+            print("W", end=" ")
+        elif cell == -1:
+            print("#", end=" ")
+        elif cell == 2:
+            print("I", end=" ")
+        elif cell == 3:
+            print("D", end=" ")
+        else:
+            print(".", end=" ")
+    print()
