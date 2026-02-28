@@ -97,3 +97,18 @@ for i in range(10):
 print(random_distances)
 print(optimized_distances)
 print(improvements)
+
+avg_random_distances = sum(random_distances)/len(random_distances)
+print(avg_random_distances)
+
+avg_optimized_distances = sum(optimized_distances)/len(optimized_distances)
+print(avg_optimized_distances)
+
+avg_improvement = sum(improvements)/len(improvements)
+print(avg_improvement)
+
+min_improvement = min(improvements)
+print(min_improvement)
+
+max_improvement = max(improvements)
+print(max_improvement)
