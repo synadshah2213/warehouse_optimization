@@ -1,6 +1,10 @@
 import itertools
 import random
 
+random_distances = []
+optimized_distances = []
+improvements = []
+
 grid = []                    # start with an empty grid
 
 worker = (2,3)
@@ -78,3 +82,18 @@ for row in grid:
         else:
             print(".", end=" ")
     print()
+
+for i in range(10):
+    random.shuffle(order)
+    print(order)
+    random_distance = calculate_distance(worker, item_positions[order[0]]) + calculate_distance(item_positions[order[0]], item_positions[order[1]]) + calculate_distance(item_positions[order[1]], item_positions[order[2]]) + calculate_distance(item_positions[order[2]], dispatch)
+    print(random_distance)  
+    improvement = ((random_distance - min(all_distances))/random_distance) * 100
+    print(improvement)
+    random_distances.append(random_distance)
+    improvements.append(improvement)
+    optimized_distances.append(min(all_distances))
+
+print(random_distances)
+print(optimized_distances)
+print(improvements)
