@@ -1,5 +1,6 @@
 import itertools
 import random
+import matplotlib.pyplot as plt
 
 random_distances = []
 optimized_distances = []
@@ -112,3 +113,16 @@ print(min_improvement)
 
 max_improvement = max(improvements)
 print(max_improvement)
+
+fig, ax = plt.subplots()
+ax.set_xlim(0, 10)
+ax.set_ylim(0, 10)
+ax.grid(True)
+ax.plot(0, 0, marker="s", color="red", markersize=15, label="Dispatch")
+ax.plot(2, 3, marker="o", color="blue", markersize=15, label="Worker")
+ax.plot(5, 4, marker="*", color="green", markersize=15, label="item_A")
+ax.plot(2, 6, marker="*", color="green", markersize=15, label="item_A")
+ax.plot(8, 8, marker="*", color="green", markersize=15, label="item_A")
+ax.legend()
+ax.set_title("Warehouse Layout")
+plt.show()
