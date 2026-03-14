@@ -51,10 +51,14 @@ print(x)
 print(list(itertools.permutations(order)))
 
 
-def find_optimized_route(order):    # Finds the optimized route 
+def find_optimized_route(order):
+    """Finds the optimized route for any number of items"""
     all_distances = []
     for x in list(itertools.permutations(order)):
-        total_distance = calculate_distance(worker, item_positions[x[0]]) + calculate_distance(item_positions[x[0]], item_positions[x[1]]) + calculate_distance(item_positions[x[1]], item_positions[x[2]]) + calculate_distance(item_positions[x[2]], dispatch)
+        total_distance = calculate_distance(worker, item_positions[x[0]])
+        for i in range(len(x) - 1):
+            total_distance += calculate_distance(item_positions[x[i]], item_positions[x[i+1]])
+        total_distance += calculate_distance(item_positions[x[-1]], dispatch)
         all_distances.append(total_distance)
     return min(all_distances)
 
@@ -63,8 +67,10 @@ optimized_distance = find_optimized_route(order)
 random.shuffle(order)
 print(order)
 
-random_distance = calculate_distance(worker, item_positions[order[0]]) + calculate_distance(item_positions[order[0]], item_positions[order[1]]) + calculate_distance(item_positions[order[1]], item_positions[order[2]]) + calculate_distance(item_positions[order[2]], dispatch)
-print(random_distance)
+random_distance = calculate_distance(worker, item_positions[order[0]])
+for i in range(len(order) - 1):
+    random_distance += calculate_distance(item_positions[order[i]], item_positions[order[i+1]])
+random_distance += calculate_distance(item_positions[order[-1]], dispatch)
 
 improvement = ((random_distance - optimized_distance)/random_distance) * 100
 print(improvement)
@@ -93,7 +99,10 @@ def run_simulation(order, optimized_distance):    #Runs the simulation 10 times 
     
     for i in range(10):
         random.shuffle(order)
-        random_distance = calculate_distance(worker, item_positions[order[0]]) + calculate_distance(item_positions[order[0]], item_positions[order[1]]) + calculate_distance(item_positions[order[1]], item_positions[order[2]]) + calculate_distance(item_positions[order[2]], dispatch)
+        random_distance = calculate_distance(worker, item_positions[order[0]])
+        for i in range(len(order) - 1):
+            random_distance += calculate_distance(item_positions[order[i]], item_positions[order[i+1]])
+        random_distance += calculate_distance(item_positions[order[-1]], dispatch)
         improvement = ((random_distance - optimized_distance)/random_distance) * 100
         random_distances.append(random_distance)
         improvements.append(improvement)
