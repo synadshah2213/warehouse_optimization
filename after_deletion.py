@@ -73,35 +73,10 @@ def find_optimized_route(order):
         all_distances.append(total_distance)
     return min(all_distances)
 
-optimized_distance = find_optimized_route(order)
-
-random.shuffle(order)
-print(order)
-
-random_distance = calculate_distance(worker, item_positions[order[0]])
-for i in range(len(order) - 1):
-    random_distance += calculate_distance(item_positions[order[i]], item_positions[order[i+1]])
-random_distance += calculate_distance(item_positions[order[-1]], dispatch)
-
-improvement = ((random_distance - optimized_distance)/random_distance) * 100
-print(improvement)
 
 
-for row in grid:
-    for cell in row:
-        if cell == 0:
-            print (".", end=" ")
-        elif cell == 1:
-            print("W", end=" ")
-        elif cell == -1:
-            print("#", end=" ")
-        elif cell == 2:
-            print("I", end=" ")
-        elif cell == 3:
-            print("D", end=" ")
-        else:
-            print(".", end=" ")
-    print()
+
+
 
 def run_simulation(order, optimized_distance):    #Runs the simulation 10 times for improved accuracy
     random_distances = []
@@ -121,22 +96,7 @@ def run_simulation(order, optimized_distance):    #Runs the simulation 10 times 
     
     return random_distances, optimized_distances, improvements
 
-random_distances, optimized_distances, improvements = run_simulation(order, optimized_distance)
 
-avg_random_distances = sum(random_distances)/len(random_distances)
-print(avg_random_distances)
-
-avg_optimized_distances = sum(optimized_distances)/len(optimized_distances)
-print(avg_optimized_distances)
-
-avg_improvement = sum(improvements)/len(improvements)
-print(avg_improvement)
-
-min_improvement = min(improvements)
-print(min_improvement)
-
-max_improvement = max(improvements)
-print(max_improvement)
 
 
 def visualize_warehouse():      #function that visualizes the warehouse usign matplotlib 
@@ -154,14 +114,3 @@ def visualize_warehouse():      #function that visualizes the warehouse usign ma
     ax.legend()
     ax.set_title("Warehouse Layout")
 
-visualize_warehouse()
-
-runs = list(range(10))
-fig2, ax2 = plt.subplots()
-ax2.bar(runs, random_distances, width=0.4, label="Random Route", color="orange")
-ax2.bar([r + 0.4 for r in runs], optimized_distances, width=0.4, label="Optimized Route", color="purple")
-ax2.set_xlabel("Simulation Run")
-ax2.set_ylabel("Distance")
-ax2.set_title("Random vs Optimized Distance")
-ax2.legend()
-plt.show()

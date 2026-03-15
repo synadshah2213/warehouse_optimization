@@ -1,7 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from warehouse_grid import setup_grid, find_optimized_route, run_simulation, calculate_distance
-
+from after_deletion import setup_grid, find_optimized_route, run_simulation, calculate_distance
 # Page config
 st.set_page_config(page_title="Smart Warehouse Assistant", page_icon="🏭", layout="wide")
 
@@ -42,7 +41,10 @@ with st.sidebar:
     st.markdown("---")
 
     st.subheader("📦 Select Items to Pick")
-    order = st.multiselect("", options=["item_A", "item_B", "item_C"], default=["item_A", "item_B", "item_C"])
+    order = st.multiselect("", 
+    options=["item_A", "item_B", "item_C", "item_D", "item_E", "item_F", "item_G", "item_H"],
+    default=["item_A", "item_B", "item_C", "item_D", "item_E"]
+    )
 
     st.markdown("---")
     st.subheader("👷 Worker Starting Position")
@@ -92,7 +94,7 @@ if run_button:
 
         # Bar chart
         st.subheader("📉 Random vs Optimized Distance Per Run")
-        fig2, ax2 = plt.subplots(figsize=(10, 4))
+        fig2, ax2 = plt.subplots(figsize=(6, 3))
         runs = list(range(len(random_distances)))
         ax2.bar(runs, random_distances, width=0.4, label="Random Route", color="#e94560")
         ax2.bar([r + 0.4 for r in runs], optimized_distances, width=0.4, label="Optimized Route", color="#1a1a2e")
@@ -106,10 +108,19 @@ if run_button:
 
         # Warehouse map
         st.subheader("🗺️ Warehouse Layout")
-        item_positions = {"item_A": (4, 5), "item_B": (6, 2), "item_C": (8, 8)}
-        fig, ax = plt.subplots(figsize=(6, 6))
-        ax.set_xlim(0, 10)
-        ax.set_ylim(0, 10)
+        item_positions = {
+            "item_A": (4,5),
+            "item_B": (6,2),
+            "item_C": (8,8),
+            "item_D": (10,12),
+            "item_E": (12,4),
+            "item_F": (14,9),
+            "item_G": (3,7),
+            "item_H": (7,11)
+        }
+        fig, ax = plt.subplots(figsize=(4, 4))
+        ax.set_xlim(0, 15)
+        ax.set_ylim(0, 15)
         ax.grid(True, alpha=0.3)
         ax.set_facecolor("#f5f7fa")
         ax.plot(dispatch[1], dispatch[0], marker="s", color="#e94560", markersize=15, label="Dispatch")
