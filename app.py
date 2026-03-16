@@ -1,6 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from after_deletion import setup_grid, find_optimized_route, run_simulation, calculate_distance
+from after_deletion import setup_grid, find_optimized_route, run_simulation, calculate_distance, bfs_distance, grid
 # Page config
 st.set_page_config(page_title="Smart Warehouse Assistant", page_icon="🏭", layout="wide")
 
@@ -33,6 +33,8 @@ st.markdown("""
 st.title("🏭 Smart Warehouse Assistant")
 st.markdown("**Optimize your warehouse picking routes with AI-powered simulation**")
 st.markdown("---")
+
+
 
 # Sidebar
 with st.sidebar:
@@ -76,7 +78,7 @@ if run_button:
     else:
         with st.spinner("Running simulation..."):
             grid = setup_grid()
-            optimized_distance = find_optimized_route(order)
+            optimized_distance, best_route = find_optimized_route(order)
             random_distances, optimized_distances, improvements = run_simulation(order, optimized_distance)
 
         st.success("✅ Simulation Complete!")
@@ -91,6 +93,8 @@ if run_button:
         col4.metric("⭐ Best Improvement", f"{max(improvements):.1f}%")
 
         st.markdown("---")
+        st.subheader("🗺️ Optimal Picking Sequence")
+        st.write(" → ".join(best_route) + " → Dispatch")
 
         # Bar chart
         st.subheader("📉 Random vs Optimized Distance Per Run")

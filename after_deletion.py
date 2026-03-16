@@ -1,6 +1,7 @@
 import itertools
 import random
 import matplotlib.pyplot as plt
+from collections import deque
 
 worker = (2,3)
 dispatch = (0,0)
@@ -43,7 +44,7 @@ item_positions = {
 }
 
 order = ["item_A", "item_B", "item_C", "item_D", "item_E", "item_F", "item_G", "item_H"]
-print(order)
+
 
 for x in order:
     item_positions[x]
@@ -59,19 +60,25 @@ def calculate_distance(pos1, pos2): # Calculates the distance between objects
 x = calculate_distance(worker,(4,5)) + calculate_distance((4,5),(8,8)) + calculate_distance((8,8),dispatch)
 print(x)
 
-print(list(itertools.permutations(order)))
+
 
 
 def find_optimized_route(order):
     """Finds the optimized route for any number of items"""
-    all_distances = []
+    best_route = None
+    best_distance = float('inf')
+    
     for x in list(itertools.permutations(order)):
-        total_distance = calculate_distance(worker, item_positions[x[0]])
+        total_distance = bfs_distance(worker, item_positions[x[0]], grid)
         for i in range(len(x) - 1):
-            total_distance += calculate_distance(item_positions[x[i]], item_positions[x[i+1]])
-        total_distance += calculate_distance(item_positions[x[-1]], dispatch)
-        all_distances.append(total_distance)
-    return min(all_distances)
+            total_distance += bfs_distance(item_positions[x[i]], item_positions[x[i+1]], grid)
+        total_distance += bfs_distance(item_positions[x[-1]], dispatch, grid)
+        
+        if total_distance < best_distance:
+            best_distance = total_distance
+            best_route = x
+    
+    return best_distance, best_route
 
 
 
@@ -85,10 +92,10 @@ def run_simulation(order, optimized_distance):    #Runs the simulation 10 times 
     
     for i in range(10):
         random.shuffle(order)
-        random_distance = calculate_distance(worker, item_positions[order[0]])
+        random_distance = bfs_distance(worker, item_positions[order[0]], grid)
         for i in range(len(order) - 1):
-            random_distance += calculate_distance(item_positions[order[i]], item_positions[order[i+1]])
-        random_distance += calculate_distance(item_positions[order[-1]], dispatch)
+            random_distance += bfs_distance(item_positions[order[i]], item_positions[order[i+1]], grid)
+        random_distance += bfs_distance(item_positions[order[-1]], dispatch, grid)
         improvement = ((random_distance - optimized_distance)/random_distance) * 100
         random_distances.append(random_distance)
         improvements.append(improvement)
@@ -113,4 +120,31 @@ def visualize_warehouse():      #function that visualizes the warehouse usign ma
     ax.plot([2, 5, 2, 8, 0], [3, 6, 4, 8, 0], linestyle="--", color="orange", label="Random Route")
     ax.legend()
     ax.set_title("Warehouse Layout")
+
+def bfs_distance(start, end, grid):
+    """Finds shortest path between two points avoiding obstacles"""
+    queue = deque([(start, 0)])
+    visited = {start}
+    
+    while queue:
+        (row, col), distance = queue.popleft()
+        
+        if (row, col) == end:
+            return distance
+        
+        for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
+            new_row = row + dr
+            new_col = col + dc
+            new_pos = (new_row, new_col)
+            
+            if (0 <= new_row < len(grid) and 
+                0 <= new_col < len(grid[0]) and 
+                grid[new_row][new_col] != -1 and 
+                new_pos not in visited):
+                visited.add(new_pos)
+                queue.append((new_pos, distance + 1))
+    
+    return float('inf')
+
+
 
